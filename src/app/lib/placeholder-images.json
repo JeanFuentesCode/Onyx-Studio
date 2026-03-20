@@ -1,0 +1,10 @@
+{
+  "placeholderImages": [
+    {
+      "id": "scanner-hero",
+      "description": "Abstract technological pattern representing barcode scanning",
+      "imageUrl": "https://picsum.photos/seed/scanpro1/800/600",
+      "imageHint": "technology pattern"
+    }
+  ]
+}
