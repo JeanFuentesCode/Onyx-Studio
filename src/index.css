@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #c5a059;
+  --color-on-primary: #322300;
+  --color-background: #131313;
+  --color-on-background: #e6e2e1;
+  --color-surface: #131313;
+  --color-on-surface: #e6e2e1;
+  --color-surface-container: #1f1f1e;
+  --color-outline: #968e8b;
+  --color-outline-variant: #4e4543;
+
+  --font-sans: 'Manrope', sans-serif;
+  --font-display: 'Manrope', sans-serif;
+
+  --text-display-lg: 4rem;
+  --text-display-lg--line-height: 1.1;
+  --text-headline-lg: 2.25rem;
+  --text-headline-lg--line-height: 1.2;
+  --text-title-lg: 1.375rem;
+  --text-title-lg--line-height: 1.2;
+  --text-body-lg: 1.125rem;
+  --text-body-lg--line-height: 1.5;
+  --text-body-md: 1rem;
+  --text-body-md--line-height: 1.5;
+  --text-label-lg: 1rem;
+  --text-label-lg--line-height: 1.5;
+  --text-label-lg--letter-spacing: 0.05em;
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
+}
+
+.hero-bg {
+  background-image: radial-gradient(circle at 70% 30%, rgba(197, 160, 89, 0.15) 0%, transparent 60%);
+}
+
+.gold-wave-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://placehold.co/1920x1080/131313/131313?text=Gold+Wave+Background') no-repeat center right;
+  background-size: cover;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+}
+
+.service-card {
+  background-color: transparent;
+  border: 1px solid var(--color-outline-variant);
+  transition: all 0.3s ease;
+}
+
+.service-card:hover {
+  border-color: var(--color-primary);
+  transform: translateY(-5px);
+}
+
+.project-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card img {
+  transition: transform 0.5s ease;
+}
+
+.project-card:hover img {
+  transform: scale(1.05);
+}
+
+.project-overlay {
+  background: linear-gradient(to top, rgba(19, 19, 19, 0.9) 0%, rgba(19, 19, 19, 0) 100%);
+}
