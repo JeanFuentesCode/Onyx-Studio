@@ -1,10 +1,18 @@
-
 'use client';
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { RubiksCubeGame } from '@/components/rubiks-cube-game';
+import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
 import { Trophy, Info } from 'lucide-react';
+
+// Cargamos el componente 3D dinámicamente para evitar errores de SSR con React 19 y Three Fiber
+const RubiksCubeGame = dynamic(
+  () => import('@/components/rubiks-cube-game').then((mod) => mod.RubiksCubeGame),
+  { 
+    ssr: false,
+    loading: () => <div className="text-muted-foreground animate-pulse">Iniciando motor 3D...</div>
+  }
+);
 
 export default function HomePage() {
   const [isClient, setIsClient] = useState(false);
