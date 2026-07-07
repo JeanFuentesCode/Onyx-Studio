@@ -1,3 +1,4 @@
+
 {
   "name": "nextn",
   "version": "0.1.0",
@@ -70,6 +71,10 @@
   "overrides": {
     "react": "$react",
     "react-dom": "$react-dom",
-    "react-is": "$react"
+    "react-is": "$react",
+    "@react-three/fiber": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   }
 }

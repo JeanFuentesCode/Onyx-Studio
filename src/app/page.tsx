@@ -1,28 +1,26 @@
-'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { Card } from '@/components/ui/card';
 import { Trophy, Info } from 'lucide-react';
 
-// Cargamos el componente 3D dinámicamente para evitar errores de SSR con React 19 y Three Fiber
+// Cargamos el componente del juego de forma dinámica con SSR desactivado.
+// Al estar en un Server Component (page.tsx no tiene 'use client'), 
+// Next.js garantiza que el código de este import solo se evalúe en el navegador.
 const RubiksCubeGame = dynamic(
   () => import('@/components/rubiks-cube-game').then((mod) => mod.RubiksCubeGame),
   { 
     ssr: false,
-    loading: () => <div className="text-muted-foreground animate-pulse">Iniciando motor 3D...</div>
+    loading: () => (
+      <div className="flex flex-col items-center justify-center min-h-[400px] text-muted-foreground animate-pulse">
+        <Trophy className="w-12 h-12 mb-4 opacity-20" />
+        <p>Iniciando experiencia 3D...</p>
+      </div>
+    )
   }
 );
 
 export default function HomePage() {
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) return null;
-
   return (
     <div className="flex flex-col min-h-screen bg-background text-foreground pb-20 md:pb-8">
       <header className="p-6 flex items-center justify-between border-b border-border bg-card/50 backdrop-blur-md sticky top-0 z-10">
@@ -41,7 +39,7 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full">
-        <Suspense fallback={<div className="text-muted-foreground">Cargando experiencia 3D...</div>}>
+        <Suspense fallback={<div className="text-muted-foreground">Cargando...</div>}>
           <RubiksCubeGame />
         </Suspense>
       </main>
