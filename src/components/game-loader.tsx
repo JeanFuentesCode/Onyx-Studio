@@ -1,16 +1,15 @@
 
 'use client';
 
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { Trophy } from 'lucide-react';
 
 /**
  * GameLoader.tsx
  * 
- * Este componente es fundamental para evitar el error de 'ReactCurrentOwner' en React 19.
- * Al usar dynamic con ssr: false, garantizamos que el pesado motor 3D (Three.js/Fiber)
- * solo se cargue en el cliente. En React 19 + Next.js 15, esto es vital para evitar
- * que el servidor intente acceder a propiedades de React que solo existen en el navegador.
+ * Este componente utiliza dynamic con ssr: false para garantizar
+ * que el motor 3D NO se evalúe en el servidor.
  */
 
 const LoadingState = () => (
@@ -21,12 +20,11 @@ const LoadingState = () => (
         <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     </div>
-    <p className="text-sm font-medium tracking-wide">Cargando motor Rubik 3D...</p>
+    <p className="text-sm font-medium tracking-wide">Iniciando Rubik 3D...</p>
     <p className="text-xs opacity-50 mt-2">Optimizando para React 19</p>
   </div>
 );
 
-// Importamos el juego dinámicamente deshabilitando SSR
 const DynamicGame = dynamic(
   () => import('@/components/rubiks-cube-game').then((mod) => mod.RubiksCubeGame),
   { 
@@ -36,6 +34,14 @@ const DynamicGame = dynamic(
 );
 
 export function GameLoader() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <LoadingState />;
+
   return (
     <div className="w-full flex items-center justify-center">
       <DynamicGame />

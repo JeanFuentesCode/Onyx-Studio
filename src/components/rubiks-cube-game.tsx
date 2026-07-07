@@ -6,7 +6,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import { Cube3D } from '@/components/cube-3d';
 import { Button } from '@/components/ui/button';
-import { RotateCcw, Shuffle, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, Square } from 'lucide-react';
+import { RotateCcw, Shuffle } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 export type CubeMove = 'U' | 'D' | 'L' | 'R' | 'F' | 'B' | 'Ui' | 'Di' | 'Li' | 'Ri' | 'Fi' | 'Bi';
@@ -29,77 +29,70 @@ export function RubiksCubeGame() {
       const randomMove = moves[Math.floor(Math.random() * moves.length)];
       handleMove(randomMove);
       count++;
-      if (count >= 20) {
+      if (count >= 15) {
         clearInterval(interval);
         setIsShuffling(false);
         toast({
-          title: "Cubo mezclado",
-          description: "¡Suerte resolviéndolo!",
+          title: "¡Cubo mezclado!",
+          description: "Intenta resolverlo ahora.",
         });
       }
-    }, 150);
+    }, 200);
   }, [handleMove, isShuffling]);
 
   const resetCube = useCallback(() => {
-    // In a real app, we'd reset the internal state. 
-    // For this simple version, we'll just reload the page for a clean reset state.
     window.location.reload();
   }, []);
 
   return (
-    <div className="w-full flex flex-col items-center gap-8">
-      {/* 3D Canvas Area */}
-      <div className="w-full aspect-square max-w-[500px] relative rounded-2xl overflow-hidden bg-gradient-to-b from-card to-background border border-border shadow-2xl">
-        <Canvas shadows>
-          <PerspectiveCamera makeDefault position={[5, 5, 5]} />
-          <OrbitControls enablePan={false} minDistance={4} maxDistance={10} />
+    <div className="w-full flex flex-col items-center gap-6">
+      <div className="w-full aspect-square max-w-[450px] relative rounded-3xl overflow-hidden bg-card border border-border shadow-2xl">
+        <Canvas shadows gl={{ antialias: true }}>
+          <PerspectiveCamera makeDefault position={[5, 5, 5]} fov={50} />
+          <OrbitControls enablePan={false} minDistance={4} maxDistance={10} makeDefault />
           
-          <ambientLight intensity={0.5} />
-          <pointLight position={[10, 10, 10]} intensity={1} castShadow />
+          <ambientLight intensity={1.5} />
+          <pointLight position={[10, 10, 10]} intensity={2} castShadow />
           <Environment preset="city" />
 
           <Cube3D lastMove={move} />
         </Canvas>
       </div>
 
-      {/* Control Panel */}
-      <div className="w-full max-w-md grid grid-cols-1 gap-6">
-        <div className="flex justify-center gap-4">
-          <Button variant="outline" size="lg" onClick={shuffleCube} disabled={isShuffling} className="gap-2">
-            <Shuffle className="w-4 h-4" /> Mezclar
+      <div className="w-full max-w-md flex flex-col gap-6">
+        <div className="flex justify-center gap-3">
+          <Button variant="outline" size="lg" onClick={shuffleCube} disabled={isShuffling} className="rounded-full px-6">
+            <Shuffle className="w-4 h-4 mr-2" /> Mezclar
           </Button>
-          <Button variant="secondary" size="lg" onClick={resetCube} className="gap-2">
-            <RotateCcw className="w-4 h-4" /> Reiniciar
+          <Button variant="secondary" size="lg" onClick={resetCube} className="rounded-full px-6">
+            <RotateCcw className="w-4 h-4 mr-2" /> Reiniciar
           </Button>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
-          <div className="flex flex-col items-center gap-2 border rounded-xl p-3 bg-muted/30">
-            <span className="text-[10px] font-bold uppercase text-muted-foreground">Superior/Inferior</span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="primary" onClick={() => handleMove('U')}>U</Button>
-              <Button size="sm" variant="primary" onClick={() => handleMove('D')}>D</Button>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <p className="text-[10px] font-bold text-center uppercase tracking-wider text-muted-foreground">Caras</p>
+            <div className="grid grid-cols-3 gap-2">
+              <Button size="sm" variant="outline" onClick={() => handleMove('U')} className="font-bold">U</Button>
+              <Button size="sm" variant="outline" onClick={() => handleMove('L')} className="font-bold">L</Button>
+              <Button size="sm" variant="outline" onClick={() => handleMove('F')} className="font-bold">F</Button>
+              <Button size="sm" variant="outline" onClick={() => handleMove('D')} className="font-bold">D</Button>
+              <Button size="sm" variant="outline" onClick={() => handleMove('R')} className="font-bold">R</Button>
+              <Button size="sm" variant="outline" onClick={() => handleMove('B')} className="font-bold">B</Button>
             </div>
           </div>
-          <div className="flex flex-col items-center gap-2 border rounded-xl p-3 bg-muted/30">
-            <span className="text-[10px] font-bold uppercase text-muted-foreground">Lados</span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="primary" onClick={() => handleMove('L')}>L</Button>
-              <Button size="sm" variant="primary" onClick={() => handleMove('R')}>R</Button>
-            </div>
-          </div>
-          <div className="flex flex-col items-center gap-2 border rounded-xl p-3 bg-muted/30">
-            <span className="text-[10px] font-bold uppercase text-muted-foreground">Frontal/Trasero</span>
-            <div className="flex gap-2">
-              <Button size="sm" variant="primary" onClick={() => handleMove('F')}>F</Button>
-              <Button size="sm" variant="primary" onClick={() => handleMove('B')}>B</Button>
+          <div className="space-y-2">
+            <p className="text-[10px] font-bold text-center uppercase tracking-wider text-muted-foreground">Inversos</p>
+            <div className="grid grid-cols-3 gap-2">
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Ui')} className="font-bold">U'</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Li')} className="font-bold">L'</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Fi')} className="font-bold">F'</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Di')} className="font-bold">D'</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Ri')} className="font-bold">R'</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleMove('Bi')} className="font-bold">B'</Button>
             </div>
           </div>
         </div>
-
-        <p className="text-center text-xs text-muted-foreground">
-          Tip: Arrastra el fondo para rotar la cámara.
-        </p>
       </div>
     </div>
   );

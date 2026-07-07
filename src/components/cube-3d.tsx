@@ -2,7 +2,6 @@
 'use client';
 
 import React, { useRef, useMemo, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { CubeMove } from './rubiks-cube-game';
 
@@ -19,11 +18,9 @@ const COLORS = {
   bottom: 'yellow',
   front: 'green',
   back: 'blue',
-  inside: '#111'
 };
 
 export function Cube3D({ lastMove }: { lastMove: { type: CubeMove; timestamp: number } | null }) {
-  const groupRef = useRef<THREE.Group>(null);
   const [cubies, setCubies] = useState<CubieState[]>(() => {
     const initialCubies: CubieState[] = [];
     let id = 0;
@@ -41,7 +38,6 @@ export function Cube3D({ lastMove }: { lastMove: { type: CubeMove; timestamp: nu
     return initialCubies;
   });
 
-  // Material definition
   const materials = useMemo(() => [
     new THREE.MeshStandardMaterial({ color: COLORS.right }), // +X
     new THREE.MeshStandardMaterial({ color: COLORS.left }),  // -X
@@ -74,16 +70,10 @@ export function Cube3D({ lastMove }: { lastMove: { type: CubeMove; timestamp: nu
         }
 
         if (shouldRotate) {
-          // Calculate new position
           const newPos = cubie.position.clone().applyAxisAngle(axis, angle);
-          
-          // Calculate new rotation
-          // This is a bit tricky with Eulers, in a real production app we'd use Quaternions
-          // But for a visual prototype, we'll simulate the rotation by updating the matrix
           const matrix = new THREE.Matrix4().makeRotationFromEuler(cubie.rotation);
           const rotationMatrix = new THREE.Matrix4().makeRotationAxis(axis, angle);
           matrix.premultiply(rotationMatrix);
-          
           const newRot = new THREE.Euler().setFromRotationMatrix(matrix);
 
           return {
@@ -98,34 +88,17 @@ export function Cube3D({ lastMove }: { lastMove: { type: CubeMove; timestamp: nu
   }, [lastMove]);
 
   return (
-    <group ref={groupRef}>
+    <group>
       {cubies.map((cubie) => (
-        <Cubie 
-          key={cubie.id} 
-          position={cubie.position} 
-          rotation={cubie.rotation} 
-          materials={materials} 
-        />
+        <mesh
+          key={cubie.id}
+          position={cubie.position}
+          rotation={cubie.rotation}
+          material={materials}
+        >
+          <boxGeometry args={[0.95, 0.95, 0.95]} />
+        </mesh>
       ))}
     </group>
-  );
-}
-
-function Cubie({ position, rotation, materials }: { 
-  position: THREE.Vector3, 
-  rotation: THREE.Euler,
-  materials: THREE.MeshStandardMaterial[] 
-}) {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      rotation={rotation}
-      material={materials}
-    >
-      <boxGeometry args={[0.95, 0.95, 0.95]} />
-    </mesh>
   );
 }
