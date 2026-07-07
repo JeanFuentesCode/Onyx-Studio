@@ -15,7 +15,7 @@ export default function HomePage() {
           <h1 className="text-xl font-bold tracking-tight">Rubik's Master 3D</h1>
         </div>
         <div className="flex gap-2">
-          <Card className="px-3 py-1 flex items-center gap-2 bg-muted/50 border-none">
+          <Card className="px-3 py-1 flex items-center gap-2 bg-muted/50 border-none hidden sm:flex">
             <Info className="w-4 h-4 text-primary" />
             <span className="text-xs font-medium">Usa los botones para girar las caras</span>
           </Card>
@@ -23,12 +23,12 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full">
-        {/* GameLoader es un componente de cliente que maneja la carga dinámica de Three.js */}
+        {/* GameLoader aísla la lógica 3D del servidor */}
         <GameLoader />
       </main>
 
       <footer className="p-4 text-center text-muted-foreground text-xs">
-        <p>Desarrollado con Three.js y React Three Fiber</p>
+        <p>Desarrollado con Three.js y React Three Fiber • React 19 Ready</p>
       </footer>
     </div>
   );
