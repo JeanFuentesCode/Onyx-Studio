@@ -1,24 +1,8 @@
 
-import React, { Suspense } from 'react';
-import dynamic from 'next/dynamic';
+import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Trophy, Info } from 'lucide-react';
-
-// Cargamos el componente del juego de forma dinámica con SSR desactivado.
-// Al estar en un Server Component (page.tsx no tiene 'use client'), 
-// Next.js garantiza que el código de este import solo se evalúe en el navegador.
-const RubiksCubeGame = dynamic(
-  () => import('@/components/rubiks-cube-game').then((mod) => mod.RubiksCubeGame),
-  { 
-    ssr: false,
-    loading: () => (
-      <div className="flex flex-col items-center justify-center min-h-[400px] text-muted-foreground animate-pulse">
-        <Trophy className="w-12 h-12 mb-4 opacity-20" />
-        <p>Iniciando experiencia 3D...</p>
-      </div>
-    )
-  }
-);
+import { GameLoader } from '@/components/game-loader';
 
 export default function HomePage() {
   return (
@@ -39,9 +23,8 @@ export default function HomePage() {
       </header>
 
       <main className="flex-1 flex flex-col items-center justify-center p-4 max-w-4xl mx-auto w-full">
-        <Suspense fallback={<div className="text-muted-foreground">Cargando...</div>}>
-          <RubiksCubeGame />
-        </Suspense>
+        {/* GameLoader es un componente de cliente que maneja la carga dinámica de Three.js */}
+        <GameLoader />
       </main>
 
       <footer className="p-4 text-center text-muted-foreground text-xs">
